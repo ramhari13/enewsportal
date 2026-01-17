@@ -57,6 +57,7 @@ The **E-News Portal** solves this problem by providing a **single centralized pl
 ---
 
 ## 📁 Project Structure
+# EnewsPortal 
 
 enewsportal/
 │
