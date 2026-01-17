@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>{{ user.username }}'s Dashboard</h2>
+
+        <!-- Back Button -->
+        <a href="{% url 'profile' %}" class="btn btn-secondary mb-3">Back to Profile</a>
+
+        <!-- Create New Article Button -->
+        <a href="{% url 'create_article' %}" class="btn btn-success mb-3">Create New Article</a>
+        
+        <h3>Your Articles</h3>
+        <div class="row">
+            {% for article in articles %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <!-- Display Image or Video in a Carousel -->
+                        {% if article.image and article.video %}
+                            <div id="carousel-{{ article.id }}" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <!-- Image -->
+                                    <div class="carousel-item active">
+                                        <img src="{{ article.image.url }}" class="d-block w-100" alt="{{ article.title }}">
+                                    </div>
+                                    <!-- Video -->
+                                    <div class="carousel-item">
+                                        <video width="100%" controls class="d-block w-100">
+                                            <source src="{{ article.video.url }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                <!-- Carousel controls -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ article.id }}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ article.id }}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        {% elif article.image %}
+                            <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}">
+                        {% elif article.video %}
+                            <video width="100%" controls class="card-img-top">
+                                <source src="{{ article.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% elif article.video_url %}
+                            <!-- Display Embedded Video (YouTube/Vimeo URL) -->
+                            <iframe width="100%" height="400" src="{{ article.video_url }}" frameborder="0" allowfullscreen class="card-img-top"></iframe>
+                        {% else %}
+                            <!-- Default message if no image/video uploaded -->
+                            <div class="card-body">
+                                <p>No image or video uploaded for this article.</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <!-- Article Title -->
+                            <h5 class="card-title">{{ article.title }}</h5>
+
+                            <!-- Date and Category Information -->
+                            <p class="card-text">
+                                Date: {{ article.created_at|date:"F j, Y" }} | 
+                                Category: {{ article.category.name }}
+                            </p>
+                            
+                            <p class="card-text">{{ article.description }}</p>
+                            
+                            <p class="card-text">{{ article.content|truncatewords:30 }} <a href="{% url 'article_detail' article.id %}" class="text-primary">Read More</a></p>
+                            
+                            <a href="{% url 'update_article' id=article.id %}" class="btn btn-primary">Update</a>
+                            <a href="{% url 'delete_article' article.id %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p>No articles available. Create your first article.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

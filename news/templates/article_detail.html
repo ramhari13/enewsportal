@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<main class="container mt-3 mb-5">
+    <div class="row my-3">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <!-- If both image and video exist -->
+                {% if article.image and article.video %}
+                    <div id="carousel-{{ article.id }}" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <!-- Image -->
+                            <div class="carousel-item active">
+                                <img src="{{ article.image.url }}" class="d-block w-100" alt="{{ article.title }}">
+                            </div>
+                            <!-- Video -->
+                            <div class="carousel-item">
+                                <video width="100%" controls class="d-block w-100">
+                                    <source src="{{ article.video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                        <!-- Carousel controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ article.id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ article.id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                {% elif article.image %}
+                    <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}">
+
+                {% elif article.video %}
+                    <video width="600" controls>
+                        <source src="{{ article.video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {% elif article.video_url %}
+                    <iframe width="600" height="400" src="{{ article.video_url }}" frameborder="0" allowfullscreen></iframe>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <hr/>
+                    <p class="card-text">{{ article.content }}</p>
+                </div>
+
+                <div class="card-footer">
+                    In <a href="/category/{{ article.category.id }}">{{ article.category.title }}</a> | 
+                    Published on: {{ article.created_at }}
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="card my-4">
+                <h6 class="card-header">Add Comment</h6>
+                <div class="card-body">
+                    {% for message in messages %}
+                        <p class="text-success">{{ message }}</p>
+                    {% endfor %}
+                    <form method="post" action="{% url 'article_detail' id=article.id %}">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-md-2">Name<span class="text-danger">*</span></label>
+                            <div class="col-md-10">
+                                <input type="text" name="name" required class="form-control form-control-lg rounded-pill" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">Email<span class="text-danger">*</span></label>
+                            <div class="col-md-10">
+                                <input type="email" name="email" required class="form-control form-control-lg rounded-pill" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">Comment<span class="text-danger">*</span></label>
+                            <div class="col-md-10">
+                                <textarea class="form-control form-control-lg rounded-3" name="message" required></textarea>
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary rounded-pill px-5" value="Submit" />
+                    </form>
+                </div>
+            </div>
+
+            <!-- Previous Comments -->
+            <div class="card my-4">
+                <h6 class="card-header">Previous Comments</h6>
+                <div class="card-body">
+                    {% for comment in comments %}
+                        <div class="comment-item mb-4">
+                            <div class="comment-author d-flex align-items-center mb-2">
+                                <div class="comment-avatar">
+                                    <img src="{{ comment.profile_picture_url }}" class="rounded-circle" alt="{{ comment.name }}" width="50" height="50">
+                                </div>
+                                <div class="ml-3">
+                                    <strong>{{ comment.name }}</strong> <small class="text-muted">{{ comment.email }}</small>
+                                    <p class="text-muted mb-0"><small>Posted on: {{ comment.created_at }}</small></p>
+                                </div>
+                            </div>
+                            <div class="comment-message">
+                                <p>{{ comment.message }}</p>
+                            </div>
+
+                            {% if comment.user == request.user %}
+                                <!-- Delete Button -->
+                                <form method="POST" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <hr/>
+                    {% empty %}
+                        <p>No comments yet. Be the first to comment!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary">Back to Previous Page</a>
+</main>
+{% endblock %}

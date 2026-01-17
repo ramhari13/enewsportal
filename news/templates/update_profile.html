@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  <title>Update Profile</title>
+{% endblock title %}
+
+{% block content %}
+  <div class="container">
+    <div class="update-profile-box">
+      <h2 class="user-update-profile-heading">Update Profile</h2>
+      
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- User Update Form Fields -->
+        <div class="input-group">
+          <input type="text" name="username" id="username" class="form-input" placeholder="Enter Username" value="{{ user_form.username.value }}">
+          <p class="error-message">{{ user_form.username.errors }}</p>
+        </div>
+
+        <div class="input-group">
+          <input type="email" name="email" id="email" class="form-input" placeholder="Enter Email Address" value="{{ user_form.email.value }}">
+          <p class="error-message">{{ user_form.email.errors }}</p>
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="first_name" id="first_name" class="form-input" placeholder="Enter First Name" value="{{ user_form.first_name.value }}">
+          <p class="error-message">{{ user_form.first_name.errors }}</p>
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="last_name" id="last_name" class="form-input" placeholder="Enter Last Name" value="{{ user_form.last_name.value }}">
+          <p class="error-message">{{ user_form.last_name.errors }}</p>
+        </div>
+
+        <!-- Optional: Add profile picture field -->
+        <div class="input-group">
+          <label for="profile_picture">Profile Picture</label>
+          <input type="file" name="profile_picture" id="profile_picture" class="form-input">
+          <p class="error-message">{{ profile_form.profile_picture.errors }}</p>
+        </div>
+
+        <button type="submit" class="btn">Save Changes</button>
+      </form>
+
+      {% if error %}
+        <p class="error-message">{{ error }}</p>
+      {% endif %}
+
+      <p class="login-link">
+        <a href="/profile/" class="link">Back to Profile</a>
+      </p>
+    </div>
+  </div>
+
+  <style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .update-profile-box {
+        width: 100%;
+        max-width: 400px;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-update-profile-heading {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.875rem;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #4a90e2;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #357ABD;
+    }
+
+    .btn:focus {
+        outline: none;
+    }
+
+    .login-link {
+        text-align: center;
+        font-size: 0.875rem;
+        margin-top: 20px;
+    }
+
+    .login-link .link {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .login-link .link:hover {
+        text-decoration: underline;
+    }
+  </style>
+{% endblock %}

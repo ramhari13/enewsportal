@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <!-- Profile Heading -->
+        <h2 class="username-heading">{{ user.username }}'s Profile</h2>
+
+        <!-- Container for profile picture and user details -->
+        <div class="profile-container">
+            <!-- Profile Picture Section -->
+            <div class="profile-picture">
+                {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-img">
+            {% else %}
+                <p>No profile picture uploaded</p>
+            {% endif %}
+            
+            </div>
+
+            <!-- User Details Section -->
+            <div class="user-details">
+                <p><strong>First Name:</strong> {{ user.first_name }}</p>
+                <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Button Container for "Update Profile" and "Go to Dashboard" -->
+        <div class="button-container">
+            <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Profile</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px; /* Increase padding for a larger space */
+        }
+
+        .username-heading {
+            font-size: 2rem; /* Increase heading size */
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 50px; /* Increase gap for more space */
+            margin-bottom: 40px; /* Increase bottom margin */
+        }
+
+        .profile-picture {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 200px; /* Increase profile image size */
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-top: 20px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px; /* Increase gap between details */
+            text-align: left;
+            font-size: 1.2rem; /* Increase text size */
+        }
+
+        .user-details p {
+            line-height: 1.6;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 25px; /* Increase space between buttons */
+            justify-content: center;
+            margin-top: 40px; /* Increase top margin */
+        }
+
+        .btn {
+            padding: 16px; /* Increase button padding */
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 6px; /* Rounded buttons */
+            font-size: 18px; /* Increase font size of buttons */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 180px; /* Set width for buttons */
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #357ABD;
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .btn-secondary {
+            background-color: #a9a9a9;
+        }
+
+        .btn-secondary:hover {
+            background-color: #808080;
+        }
+    </style>
+{% endblock %}

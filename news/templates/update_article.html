@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="text-center">Update Article</h2>
+<a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary">Back to Previous Page</a>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-warning w-100">Update Article</button>
+        </form>
+        
+        {% if error %}
+        <p style=" color: rgb(255, 0, 0);">{{error}}</p>
+        {% endif %}
+
+    </div>
+    
+</div>
+{% endblock %}

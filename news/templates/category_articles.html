@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="text-center mb-4">{{ category.name }} Articles</h1>
+    <div class="row">
+      {% for article in articles %}
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <!-- If both image and video exist -->
+            {% if article.image and article.video %}
+              <div id="carousel-{{ article.id }}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <!-- Image -->
+                  <div class="carousel-item active">
+                    <img src="{{ article.image.url }}" class="d-block w-100" alt="{{ article.title }}">
+                  </div>
+                  <!-- Video -->
+                  <div class="carousel-item">
+                    <video width="100%" controls class="d-block w-100">
+                      <source src="{{ article.video.url }}" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+                <!-- Carousel controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ article.id }}" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ article.id }}" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+            <!-- If only image is uploaded -->
+            {% elif article.image %}
+              <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}">
+
+            <!-- If only video is uploaded -->
+            {% elif article.video %}
+              <video width="100%" controls class="card-img-top">
+                <source src="{{ article.video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% elif article.video_url %}
+              <iframe width="100%" height="400" src="{{ article.video_url }}" frameborder="0" allowfullscreen class="card-img-top"></iframe>
+            {% endif %}
+            
+            <div class="card-body">
+              <h5 class="card-title">{{ article.title }}</h5>
+              <p class="card-text">
+                Author: {{ article.author.username }} | 
+                Date: {{ article.created_at }} | 
+                Category: {{ article.category.name }}
+              </p>
+              <h6 class="card-subtitle mb-2 text-body-secondary">{{ article.description }}</h6>
+              <p class="card-text">{{ article.content|truncatewords:20 }} <a href="{% url 'article_detail' article.id %}" class="text-primary">Read More</a></p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <p class="text-center">No articles available in this category at the moment.</p>
+        </div>
+      {% endfor %}
+    </div>
+    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary">Back to Previous Page</a>
+  </div>
+{% endblock %}
